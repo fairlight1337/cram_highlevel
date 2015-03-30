@@ -59,8 +59,7 @@
   ;; two predicates used to implement equality check
   (labels ((transform-available-p (source-frame target-frame &key (time 0.0) (timeout 2.0))
              ;; Auxiliary predicate to check whether a tf-transform is available."
-             (cl-tf2:ensure-transform-available
-              *tf2* source-frame target-frame))
+             (cl-tf2:has-transform *tf2* target-frame source-frame time timeout))
            (poses-equal-in-frame-p (pose-1 pose-2 compare-frame)
              ;; Predicate to check equality of two poses w.r.t. a given frame."
              (when (and (transform-available-p
@@ -71,11 +70,9 @@
                          :time (tf:stamp pose-2)))
                ;; assert: both poses can be transformed into 'compare-frame'
                (let ((pose-1-transformed
-                       (cl-tf2:ensure-pose-stamped-transformed
-                        *tf2* pose-1 compare-frame :use-current-ros-time t))
+                       (cl-tf2:do-transform *tf2* pose-1 compare-frame))
                      (pose-2-transformed
-                       (cl-tf2:ensure-pose-stamped-transformed
-                        *tf2* pose-2 compare-frame :use-current-ros-time t)))
+                       (cl-tf2:do-transform *tf2* pose-2 compare-frame)))
                  ;; compare transformed poses using pre-defined thresholds
                  (and (< (cl-transforms:v-dist
                       (cl-transforms:origin pose-1-transformed)

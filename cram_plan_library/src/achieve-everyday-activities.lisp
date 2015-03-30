@@ -58,10 +58,9 @@
                (sem-map-utils:pose semantic-handle-reference))
              (handle-pose-map
                (tf:copy-pose-stamped
-                (cl-tf2:ensure-pose-stamped-transformed
+                (cl-tf2:do-transform
                  cram-roslisp-common::*tf2*
-                 handle-pose
-                 "map" :use-current-ros-time t)
+                 handle-pose "map")
                 :orientation (tf:orientation
                               semantic-handle-pose))))
         (make-designator
