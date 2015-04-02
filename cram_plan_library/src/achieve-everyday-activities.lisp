@@ -57,12 +57,16 @@
              (semantic-handle-pose
                (sem-map-utils:pose semantic-handle-reference))
              (handle-pose-map
-               (tf:copy-pose-stamped
-                (cl-tf2:do-transform
-                 cram-roslisp-common::*tf2*
-                 handle-pose "map")
-                :orientation (tf:orientation
-                              semantic-handle-pose))))
+               (let ((transformed-pose 
+                       (cl-tf2:do-transform
+                         cram-roslisp-common::*tf2*
+                         handle-pose "map")))
+                 (cl-transforms-plugin:make-pose-stamped
+                  (cl-tf:make-pose
+                   (cl-tf:origin (cl-transforms-plugin:pose transformed-pose))
+                   (tf:orientation semantic-handle-pose))
+                  (cl-transforms-plugin::get-frame-id transformed-pose)
+                  (cl-transforms-plugin::get-time-stamp transformed-pose)))))
         (make-designator
          'object `((desig-props::name ,?semantic-name)
                    (desig-props::type desig-props::semantic-handle)

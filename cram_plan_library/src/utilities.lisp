@@ -45,10 +45,9 @@
   (let ((robot-pose
           (cl-tf2:do-transform
             *tf2*
-            (tf:make-pose-stamped
-             designators-ros:*robot-base-frame* 0.0
-             (cl-transforms:make-identity-vector)
-             (cl-transforms:make-identity-rotation))
+            (cl-transforms-plugin:make-pose-stamped
+             (cl-tf:make-identity-pose)
+             designators-ros:*robot-base-frame* 0.0)
             designators-ros:*fixed-frame*)))
     (tf:copy-pose-stamped
      robot-pose

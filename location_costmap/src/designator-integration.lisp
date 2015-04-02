@@ -60,12 +60,11 @@
 (defun robot-current-pose-generator (desig)
   (declare (ignore desig))
   (list (cl-tf2:do-transform
-         *tf2*
-         (tf:make-pose-stamped
-          "/base_footprint" (roslisp:ros-time)
-          (tf:make-identity-vector)
-          (tf:make-identity-rotation))
-         "/map")))
+          *tf2*
+          (cl-transforms-plugin:make-pose-stamped
+           (cl-tf:make-identity-pose)
+           "/base_footprint" (roslisp:ros-time))
+          "/map")))
 
 (defun location-costmap-generator (desig)
   (let ((costmap (get-cached-costmap desig)))
