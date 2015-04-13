@@ -45,6 +45,6 @@
 
   (<- (pose-stamped ?pose ?frame-id ?stamp ?origin ?orientation)
     (lisp-type ?pose tf:pose-stamped)
-    (lisp-fun tf:frame-id ?pose ?frame-id)
-    (lisp-fun tf:stamp ?pose ?stamp)
+    (lisp-fun cl-tf2:get-frame-id ?pose ?frame-id)
+    (lisp-fun cl-tf2:get-time-stamp ?pose ?stamp)
     (pose ?pose ?origin ?orientation)))
