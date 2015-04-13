@@ -64,7 +64,8 @@
         (let* ((obj-name (string-upcase (make-collision-obj-name obj)))
                (pose-stamped (cl-tf2:do-transform
                               *tf2*
-                              (cl-transforms-plugin:pose->pose-stamped "/map" 0.0 pose)
+                              (cl-transforms-plugin:make-pose-stamped
+                               pose "/map" 0.0)
                               "/odom_combined")))
             (moveit:register-collision-object
              obj-name
