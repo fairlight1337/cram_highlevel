@@ -48,7 +48,7 @@
 
 (defgeneric ensure-pose-stamped (position-object frame-id stamp)
   (:method ((pose cl-transforms:pose) frame-id stamp)
-    (tf:pose->pose-stamped frame-id stamp pose))
+    (cl-transforms-plugin:pose->pose-stamped frame-id stamp pose))
   (:method ((pose-stamped tf:pose-stamped) frame-id stamp)
     (declare (ignore frame-id stamp))
     pose-stamped))

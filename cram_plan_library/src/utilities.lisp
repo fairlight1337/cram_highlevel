@@ -49,7 +49,7 @@
              (cl-tf:make-identity-pose)
              designators-ros:*robot-base-frame* 0.0)
             designators-ros:*fixed-frame*)))
-    (tf:copy-pose-stamped
+    (cl-transforms-plugin:copy-ext-pose-stamped
      robot-pose
      :origin (cl-transforms:copy-3d-vector
               (cl-transforms:origin robot-pose) :z 0.0))))
