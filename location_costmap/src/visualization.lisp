@@ -145,7 +145,7 @@ respectively."
                                       (action) (roslisp-msg-protocol:symbol-code
                                                 'visualization_msgs-msg:marker
                                                 :add)
-                                      (pose) (cl-transforms:pose->msg pose)
+                                      (pose) (cl-transforms-plugin:pose->msg pose)
                                       (x scale) resolution
                                       (y scale) resolution
                                       (z scale) resolution
