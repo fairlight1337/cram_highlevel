@@ -62,7 +62,7 @@
   (list (cl-tf2:do-transform
           *tf2*
           (cl-transforms-plugin:make-pose-stamped
-           (cl-tf:make-identity-pose)
+           (cl-transforms:make-identity-pose)
            "/base_footprint" (roslisp:ros-time))
           "/map")))
 

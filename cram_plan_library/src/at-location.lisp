@@ -80,6 +80,7 @@ designator."
                          nil at-location-task
                          (lambda  ()
                            (pulse robot-location-changed-fluent)))))))))
+      ;; TODO(winkler): This needs to be changed when we switch to cl-tf2.
       (tf:with-transforms-changed-callback (*tf* #'set-current-location)
         (with-equate-fluent (loc-var designator-updated)
           (loop

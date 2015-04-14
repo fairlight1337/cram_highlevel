@@ -41,7 +41,7 @@
                                 (:forward
                                  `((to see)
                                    (pose ,(cl-transforms-plugin:make-pose-stamped
-                                           (cl-tf:make-pose
+                                           (cl-transforms:make-pose
                                             (cl-transforms:make-3d-vector
                                              3.0 0.0 1.5)
                                             (cl-transforms:make-quaternion

@@ -46,7 +46,7 @@
           (cl-tf2:do-transform
             *tf2*
             (cl-transforms-plugin:make-pose-stamped
-             (cl-tf:make-identity-pose)
+             (cl-transforms:make-identity-pose)
              designators-ros:*robot-base-frame* 0.0)
             designators-ros:*fixed-frame*)))
     (cl-transforms-plugin:copy-ext-pose-stamped

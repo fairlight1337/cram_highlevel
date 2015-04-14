@@ -62,9 +62,9 @@
                          cram-roslisp-common::*tf2*
                          handle-pose "map")))
                  (cl-transforms-plugin:make-pose-stamped
-                  (cl-tf:make-pose
-                   (cl-tf:origin (cl-transforms-plugin:pose transformed-pose))
-                   (tf:orientation semantic-handle-pose))
+                  (cl-transforms:make-pose
+                   (cl-transforms:origin (cl-transforms-plugin:pose transformed-pose))
+                   (cl-transforms:orientation semantic-handle-pose))
                   (cl-transforms-plugin::get-frame-id transformed-pose)
                   (cl-transforms-plugin::get-time-stamp transformed-pose)))))
         (make-designator

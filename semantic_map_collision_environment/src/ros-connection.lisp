@@ -128,7 +128,7 @@
      id index
      type 1
      action 0
-     pose (tf:pose->msg pose)
+     pose (cl-transforms-plugin:pose->msg pose)
      (x scale) (x dimensions)
      (y scale) (y dimensions)
      (z scale) (z dimensions)
