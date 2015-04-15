@@ -52,13 +52,17 @@
     (cl-transforms-plugin:copy-ext-pose-stamped
      robot-pose
      :origin (cl-transforms:copy-3d-vector
-              (cl-transforms:origin robot-pose) :z 0.0))))
+              (cl-transforms:origin
+               (cl-transforms-plugin:pose robot-pose))
+              :z 0.0))))
 
 (defun distance-to-drive (goal)
   (let ((loc-1 (reference goal))
         (current-loc (current-robot-location)))
-    (cl-transforms:v-dist (cl-transforms:origin loc-1)
-                          (cl-transforms:origin current-loc))))
+    (cl-transforms:v-dist (cl-transforms:origin
+                           (cl-transforms-plugin:pose loc-1))
+                          (cl-transforms:origin
+                           (cl-transforms-plugin:pose current-loc)))))
 
 (defmacro retry-with-updated-location (location update-form)
   "If the evaluation of `update-form' returns non-nil, sets `location'
