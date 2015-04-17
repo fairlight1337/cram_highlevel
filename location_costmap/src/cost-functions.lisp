@@ -33,6 +33,8 @@
   `object'. E.g. if `object' is a pose, returns the position part.")
   (:method ((pose cl-transforms:pose))
     (cl-transforms:origin pose))
+  (:method ((pose cl-transforms-plugin:pose-stamped))
+    (get-point (cl-transforms-plugin:pose pose)))
   (:method ((point cl-transforms:3d-vector))
     point))
 

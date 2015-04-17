@@ -57,6 +57,16 @@ function that takes exactly one parameter, the solution."
   "Filters (i.e. removes) all solutions that are closer than
 `distance-threshold' to `pose'."
   (lambda (solution)
-    (> (cl-transforms:v-dist
-        (cl-transforms:origin pose) (cl-transforms:origin solution))
-       distance-threshold)))
+    (let ((distance
+            (cl-transforms:v-dist
+             (cl-transforms:origin
+              (or (when (eql (type-of pose)
+                             'cl-transforms-plugin:pose-stamped)
+                    (cl-transforms-plugin:pose pose))
+                  pose))
+             (cl-transforms:origin
+              (or (when (eql (type-of solution)
+                             'cl-transforms-plugin:pose-stamped)
+                    (cl-transforms-plugin:pose solution))
+                  solution)))))
+      (> distance distance-threshold))))
