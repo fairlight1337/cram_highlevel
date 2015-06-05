@@ -113,6 +113,74 @@
                       (= '(?d ?w ?h) ?dim))
                 :package :sem-map-coll-env)))
 
+(defmethod get-sem-map-objs ((type (eql '|'RackBack'|)) name)
+  (lazy-mapcan (lambda (bdg)
+                 (with-vars-bound (?pose ?dim)
+                     bdg
+                   (lazy-append
+                    (make-box
+                     name type
+                     (pl-matrix->pose ?pose)
+                     (apply #'make-3d-vector ?dim)
+                     :front nil)
+                    (query-physical-parts name))))
+               (json-prolog:prolog
+                `(and ("current_object_pose" ,name ?pose)
+                      ("map_object_dimensions" ,name ?w ?d ?h)
+                      (= '(?d ?w ?h) ?dim))
+                :package :sem-map-coll-env)))
+
+(defmethod get-sem-map-objs ((type (eql '|'RackLevel'|)) name)
+  (lazy-mapcan (lambda (bdg)
+                 (with-vars-bound (?pose ?dim)
+                     bdg
+                   (lazy-append
+                    (make-box
+                     name type
+                     (pl-matrix->pose ?pose)
+                     (apply #'make-3d-vector ?dim)
+                     :front nil)
+                    (query-physical-parts name))))
+               (json-prolog:prolog
+                `(and ("current_object_pose" ,name ?pose)
+                      ("map_object_dimensions" ,name ?w ?d ?h)
+                      (= '(?d ?w ?h) ?dim))
+                :package :sem-map-coll-env)))
+
+(defmethod get-sem-map-objs ((type (eql '|'Rack'|)) name)
+  (lazy-mapcan (lambda (bdg)
+                 (with-vars-bound (?pose ?dim)
+                     bdg
+                   (lazy-append
+                    (make-box
+                     name type
+                     (pl-matrix->pose ?pose)
+                     (apply #'make-3d-vector ?dim)
+                     :front nil)
+                    (query-physical-parts name))))
+               (json-prolog:prolog
+                `(and ("current_object_pose" ,name ?pose)
+                      ("map_object_dimensions" ,name ?w ?d ?h)
+                      (= '(?d ?w ?h) ?dim))
+                :package :sem-map-coll-env)))
+
+(defmethod get-sem-map-objs ((type (eql '|'ShoppingAreaWall'|)) name)
+  (lazy-mapcan (lambda (bdg)
+                 (with-vars-bound (?pose ?dim)
+                     bdg
+                   (lazy-append
+                    (make-box
+                     name type
+                     (pl-matrix->pose ?pose)
+                     (apply #'make-3d-vector ?dim)
+                     :front nil)
+                    (query-physical-parts name))))
+               (json-prolog:prolog
+                `(and ("current_object_pose" ,name ?pose)
+                      ("map_object_dimensions" ,name ?w ?d ?h)
+                      (= '(?d ?w ?h) ?dim))
+                :package :sem-map-coll-env)))
+
 (defmethod get-sem-map-objs ((type (eql '|'Dishwasher'|)) name)
   (lazy-mapcan (lambda (bdg)
                  (with-vars-bound (?pose ?dim)
