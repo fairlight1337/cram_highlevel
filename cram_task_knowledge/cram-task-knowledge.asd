@@ -42,4 +42,5 @@
   ((:module "src"
             :components
             ((:file "package")
-             (:file "table-setting" :depends-on ("package"))))))
+             (:file "table-setting" :depends-on ("package"))
+             (:file "perception" :depends-on ("package"))))))

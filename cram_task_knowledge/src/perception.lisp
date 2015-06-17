@@ -25,22 +25,6 @@
 ;;; ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 ;;; POSSIBILITY OF SUCH DAMAGE.
 
-(in-package :cl-user)
+(in-package :cram-task-knowledge)
 
-(desig-props:def-desig-package cram-task-knowledge
-  (:documentation "Task Specific Knowledge Supporting CRAM High Level Plans")
-  (:use #:cpl
-        #:cram-designators
-        #:cram-language-designator-support
-        #:cram-utilities
-        #:roslisp
-        #:cram-roslisp-common
-        #:alexandria)
-  (:shadowing-import-from #:cram-utilities #:extremum)
-  (:export table-setting-object
-           situation?
-           meal-time
-           objects-perceived)
-  (:import-from :cram-reasoning def-fact-group <-)
-  (:import-from cram-roslisp-common *tf2*)
-  (:desig-properties type situation meal-time breakfast lunch dinner))
+(define-hook objects-perceived (object-designators))
