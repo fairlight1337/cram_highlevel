@@ -291,3 +291,17 @@
           (with-designators
               ((flip-action (action appended-description)))
             (perform flip-action)))))))
+
+(defmacro with-environment-articulated (location degree &body body)
+  `(unwind-protect
+        (progn
+          (achieve `(container-opened ,,location ,,degree))
+          ,@body)
+     ));(achieve `(container-closed ,,location ,,(1- degree)))))
+
+(def-goal (fetch ?obj)
+  (ros-info (fetch) "Trying to fetch object")
+  (let ((at (desig-prop-value ?obj 'desig-props::at)))
+    (assert at nil "Object to fetch is missing the `at' property.")
+    (with-environment-articulated at 1.0
+      (format t "Doing something with the articulated environment.~%"))))
