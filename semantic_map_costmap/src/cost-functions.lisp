@@ -340,3 +340,30 @@ list of SEM-MAP-UTILS:SEMANTIC-MAP-GEOMs"
     (loop for obj in (cut:force-ll objects)
           when (point-on-object obj (cl-transforms:make-3d-vector x y 0))
             collecting (float (obj-z-value obj type-tag) 0.0d0))))
+
+(defun make-open-container-costmap (semantic-object type)
+  (let* ((object-pose
+           (tf:pose->pose-stamped
+            "map" 0.0
+            (sem-map-utils:pose semantic-object)))
+         (origin (tf:origin object-pose)))
+    ;; NOTE(winkler): This is not general enough yet, but works for
+    ;; the current test scenarios. The costmaps are being generated
+    ;; "in front of" the objects, as specified in the current IAI
+    ;; semantic map. Will be refactored.
+    (case type
+      (:drawer
+       (lambda (x y)
+         (if (< x (- (tf:x origin) 0.6))
+             (if (> x (- (tf:x origin) 0.75))
+                 (if (> y (- (tf:y origin) 0.25))
+                     (if (< y (+ (tf:y origin) 0.25))
+                         1.0d0
+                         0.0d0)
+                     0.0d0)
+                 0.0d0)
+             0.0d0)))
+      (:fridge
+       (format t "Implement fridge map here.")
+       (lambda (x y)
+         0.0d0)))))
