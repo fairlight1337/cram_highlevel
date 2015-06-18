@@ -40,7 +40,14 @@
            situation?
            meal-time
            objects-perceived
-           filter-perceived-objects)
+           designators-match
+           location-valid
+           filter-objects
+           filter-perceived-objects
+           examine-perceived-object-designator
+           infer-object-property
+           perceived-object-invalid
+           object-handle)
   (:import-from :cram-reasoning def-fact-group <-)
   (:import-from cram-roslisp-common *tf2*)
   (:desig-properties type situation meal-time breakfast lunch dinner))

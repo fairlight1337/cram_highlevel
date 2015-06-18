@@ -33,14 +33,16 @@
   :depends-on (cram-language
                cram-reasoning
                designators
-	       cram-language-designator-support
+               cram-language-designator-support
                cram-roslisp-common
                cram-utilities
                designators-ros
-               alexandria)
+               alexandria
+               semantic-map-costmap)
   :components
   ((:module "src"
             :components
             ((:file "package")
-             (:file "table-setting" :depends-on ("package"))
-             (:file "perception" :depends-on ("package"))))))
+             (:file "facts" :depends-on ("package"))
+             (:file "table-setting" :depends-on ("package" "facts"))
+             (:file "perception" :depends-on ("package" "facts"))))))
