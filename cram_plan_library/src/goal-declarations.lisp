@@ -108,3 +108,12 @@ situation described by `situation-description'."
 
 (declare-goal drawer-opened (?semantic-name)
   (declare (ignore ?semantic-name)))
+
+(declare-goal container-opened (?location ?degree)
+  (declare (ignore ?location ?degree)))
+
+(declare-goal container-closed (?location ?degree)
+  (declare (ignore ?location ?degree)))
+
+(declare-goal fetch (?obj)
+  (declare (ignore ?obj)))

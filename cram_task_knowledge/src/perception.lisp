@@ -1,9 +1,9 @@
 ;;; Copyright (c) 2015, Jan Winkler <winkler@cs.uni-bremen.de>
 ;;; All rights reserved.
-;;;
+;;; 
 ;;; Redistribution and use in source and binary forms, with or without
 ;;; modification, are permitted provided that the following conditions are met:
-;;;
+;;; 
 ;;;     * Redistributions of source code must retain the above copyright
 ;;;       notice, this list of conditions and the following disclaimer.
 ;;;     * Redistributions in binary form must reproduce the above copyright
@@ -12,7 +12,7 @@
 ;;;     * Neither the name of University of Bremen nor the names of its
 ;;;       contributors may be used to endorse or promote products derived from
 ;;;       this software without specific prior written permission.
-;;;
+;;; 
 ;;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ;;; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ;;; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -25,22 +25,20 @@
 ;;; ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 ;;; POSSIBILITY OF SUCH DAMAGE.
 
-(defsystem cram-task-knowledge
-  :author "Jan Winkler"
-  :license "BSD"
-  :description "Task Specific Knowledge Supporting CRAM High Level Plans"
-  
-  :depends-on (cram-language
-               cram-reasoning
-               designators
-	       cram-language-designator-support
-               cram-roslisp-common
-               cram-utilities
-               designators-ros
-               alexandria)
-  :components
-  ((:module "src"
-            :components
-            ((:file "package")
-             (:file "table-setting" :depends-on ("package"))
-             (:file "perception" :depends-on ("package"))))))
+(in-package :cram-task-knowledge)
+
+(define-hook objects-perceived (object-designators))
+
+(defgeneric filter-perceived-objects (perceived-objects)
+  (:documentation "Filters all perceived objects according to all registered filters. This method is mainly used by perception process modules that want to validate and filter their results. Also, this function triggers the `object-perceived-event' plan event, updating the belief state.")
+  (:method (perceived-objects)
+    (let* ((filtered-objects
+             (loop for perceived-object in perceived-objects
+                   append (objects-perceived perceived-object))))
+      (dolist (object filtered-objects)
+        (cram-plan-knowledge:on-event
+         (make-instance
+          'cram-plan-knowledge:object-perceived-event
+          :perception-source :robosherlock-pm
+          :object-designator object)))
+      filtered-objects)))

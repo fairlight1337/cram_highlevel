@@ -45,6 +45,13 @@
 (defun is-geom (object)
   (eql (type-of object) 'semantic-map-utils:semantic-map-geom))
 
+(defmethod costmap-generator-name->score ((name (eql 'to-open-drawer)))
+  33)
+
+(defmethod costmap-generator-name->score ((name (eql 'to-open-fridge)))
+  33)
+
+
 (def-fact-group semantic-map-costmap (desig-costmap
                                       desig-z-value)
   
@@ -54,7 +61,10 @@
     (lisp-fun sem-map-utils:designator->semantic-map-objects
               ?desig ?semantic-map ?objects)
     (lisp-pred identity ?objects))
-
+  
+  (<- (semantic-map-object-type ?object ?type)
+    (lisp-fun semantic-map-utils:obj-type ?object ?type))
+  
   (<- (semantic-map-objects ?objects)
     (lisp-fun get-semantic-map ?semantic-map)
     (lisp-fun sem-map-utils:semantic-map-parts ?semantic-map
@@ -81,6 +91,26 @@
     (costmap-add-cached-height-generator
      (make-semantic-map-height-function ?objects :in)
      ?cm))
+  
+  (<- (desig-costmap ?desig ?cm)
+    (desig-prop ?desig (to open))
+    (desig-prop ?desig (location ?loc))
+    (semantic-map-desig-objects ?loc (?object . ?_))
+    (semantic-map-object-type ?object "Fridge")
+    (costmap ?cm)
+    (costmap-add-function to-open-fridge
+                          (make-open-container-costmap ?object :fridge)
+                          ?cm))
+  
+  (<- (desig-costmap ?desig ?cm)
+    (desig-prop ?desig (to open))
+    (desig-prop ?desig (location ?loc))
+    (semantic-map-desig-objects ?loc (?object . ?_))
+    (semantic-map-object-type ?object "Drawer")
+    (costmap ?cm)
+    (costmap-add-function to-open-drawer
+                          (make-open-container-costmap ?object :drawer)
+                          ?cm))
   
   (<- (desig-costmap ?desig ?cm)
     (desig-prop ?desig (centered-with-padding ?padding))
