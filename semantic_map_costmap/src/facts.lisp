@@ -42,9 +42,12 @@
 (defmethod costmap-generator-name->score ((name (eql 'center-of-object)))
   12)
 
+(defun is-geom (object)
+  (eql (type-of object) 'semantic-map-utils:semantic-map-geom))
+
 (def-fact-group semantic-map-costmap (desig-costmap
                                       desig-z-value)
-
+  
   ;; relation-tag is either IN or ON at the moment
   (<- (semantic-map-desig-objects ?desig ?objects)
     (lisp-fun get-semantic-map ?semantic-map)

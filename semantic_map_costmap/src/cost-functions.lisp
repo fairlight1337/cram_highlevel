@@ -300,7 +300,7 @@ list of SEM-MAP-UTILS:SEMANTIC-MAP-GEOMs"
   (let ((costmap-generators (mapcar (lambda (object)
                                       (make-semantic-map-object-costmap-generator
                                        object :padding padding))
-                                    (cut:force-ll objects))))
+                                    (remove-if-not #'is-geom (cut:force-ll objects)))))
     (flet ((invert-matrix (matrix)
              (declare (type cma:double-matrix matrix))
              (dotimes (row (cma:height matrix) matrix)
@@ -313,9 +313,9 @@ list of SEM-MAP-UTILS:SEMANTIC-MAP-GEOMs"
              (dolist (generator costmap-generators matrix)
                (setf matrix (funcall generator costmap-metadata matrix)))))
       (make-instance 'map-costmap-generator
-        :generator-function (if invert
-                                (alexandria:compose #'invert-matrix #'generator)
-                                #'generator)))))
+                     :generator-function (if invert
+                                             (alexandria:compose #'invert-matrix #'generator)
+                                             #'generator)))))
 
 (defun make-on-cost-function (object)
   (let ((transform (cl-transforms:pose->transform (sem-map-utils:pose object)))
