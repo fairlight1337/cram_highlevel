@@ -39,7 +39,8 @@
   (:export table-setting-object
            situation?
            meal-time
-           objects-perceived)
+           objects-perceived
+           filter-perceived-objects)
   (:import-from :cram-reasoning def-fact-group <-)
   (:import-from cram-roslisp-common *tf2*)
   (:desig-properties type situation meal-time breakfast lunch dinner))

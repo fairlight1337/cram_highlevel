@@ -28,3 +28,17 @@
 (in-package :cram-task-knowledge)
 
 (define-hook objects-perceived (object-designators))
+
+(defgeneric filter-perceived-objects (perceived-objects)
+  (:documentation "Filters all perceived objects according to all registered filters. This method is mainly used by perception process modules that want to validate and filter their results. Also, this function triggers the `object-perceived-event' plan event, updating the belief state.")
+  (:method (perceived-objects)
+    (let* ((filtered-objects
+             (loop for perceived-object in perceived-objects
+                   append (objects-perceived perceived-object))))
+      (dolist (object filtered-objects)
+        (cram-plan-knowledge:on-event
+         (make-instance
+          'cram-plan-knowledge:object-perceived-event
+          :perception-source :robosherlock-pm
+          :object-designator object)))
+      filtered-objects)))
