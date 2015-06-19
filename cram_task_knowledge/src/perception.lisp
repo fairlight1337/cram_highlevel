@@ -33,7 +33,7 @@
 (defgeneric location-valid (template object))
 (defgeneric designators-match (template subject))
 (defgeneric filter-perceived-objects (template-designator perceived-objects))
-
+(defgeneric filter-objects (template-designator perceived-objects))
 
 (define-hook objects-perceived (object-template object-designators))
 
