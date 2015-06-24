@@ -103,14 +103,9 @@ description."
   (:documentation "Filters all perceived objects according to all registered filters. This method is mainly used by perception process modules that want to validate and filter their results. Also, this function triggers the `object-perceived-event' plan event, updating the belief state.")
   (:method (object-template perceived-objects)
     (let* ((filtered-objects
-             (loop for filter-result in (objects-perceived object-template perceived-objects)
+             (loop for filter-result in (objects-perceived
+                                         object-template perceived-objects)
                    append filter-result)))
-      (dolist (object filtered-objects)
-        (cram-plan-knowledge:on-event
-         (make-instance
-          'cram-plan-knowledge:object-perceived-event
-          :perception-source :robosherlock-pm
-          :object-designator object)))
       filtered-objects)))
 
 (defmethod location-valid ((template object-designator)
@@ -175,4 +170,6 @@ the original location designator's described area, if applicable."
        ;; The designator matches based on its description (if
        ;; any). Now see if it gets accepted based on external factors.
        perceived-object))
-   perceived-objects))
+   perceived-objects)
+  ;; Hack for now
+  perceived-objects)
