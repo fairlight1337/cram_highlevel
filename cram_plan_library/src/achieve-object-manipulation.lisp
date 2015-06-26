@@ -33,10 +33,11 @@
 (defun try-reference-location (loc)
   (with-retry-counters ((designator-resolution-retry-counter 10))
     (with-failure-handling
-        ((designator-error (e)
+        (((or designator-error cram-math:invalid-probability-distribution) (e)
            (declare (ignore e))
            (do-retry designator-resolution-retry-counter
-             (retry))))
+             (retry))
+           (cpl:fail 'cram-plan-failures:location-not-reached-failure)))
       (reference loc))))
 
 (def-goal (achieve (object-picked ?obj))
