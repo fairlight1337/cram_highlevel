@@ -95,70 +95,72 @@ respectively."
                                              (base-color (vector 0 0 1))
                                              (elevate-costmap t))
   (with-slots (origin-x origin-y resolution) map
-    (let* ((map-array (get-cost-map map))
-           (boxes nil)
-           (max-val (loop for y from 0 below (array-dimension map-array 0)
-                          maximizing (loop for x from 0 below (array-dimension
-                                                               map-array 1)
-                                           maximizing (aref map-array y x)))))
-      (declare (type cma:double-matrix map-array))
-      (let ((index 0))
-        (dotimes (row (array-dimension map-array 0))
-          (dotimes (col (array-dimension map-array 1))
-            (let ((curr-val (aref map-array row col)))
-              (when (> curr-val threshold)
-                (let ((pose (tf:make-pose
-                             (tf:make-3d-vector
-                              (+ (* col resolution) origin-x)
-                              (+ (* row resolution) origin-y)
-                              (+ z (or (when elevate-costmap
-                                         (/ curr-val max-val))
-                                       0.0)))
-                             (tf:axis-angle->quaternion
-                              (tf:make-3d-vector 1.0 0.0 0.0) 0.0)))
-                      (color (cond (hsv-colormap
-                                    (hsv->rgb (* 360 (/ curr-val
-                                                        max-val))
-                                              0.5 0.5))
-                                   (intensity-colormap
-                                    (let* ((hsv-color (rgb->hsv
-                                                       (elt base-color 0)
-                                                       (elt base-color 1)
-                                                       (elt base-color 2)))
-                                           (mod-hsv
-                                             (vector (elt hsv-color 0)
-                                                     (elt hsv-color 1)
-                                                     (/ curr-val max-val))))
-                                      (hsv->rgb
-                                       (elt mod-hsv 0)
-                                       (elt mod-hsv 1)
-                                       (elt mod-hsv 2))))
-                                   (t base-color))))
-                  (push (make-message "visualization_msgs/Marker"
-                                      (frame_id header) frame-id
-                                      (stamp header) (ros-time)
-                                      (ns) ""
-                                      (id) index
-                                      (type) (roslisp-msg-protocol:symbol-code
-                                              'visualization_msgs-msg:marker
-                                              :cube)
-                                      (action) (roslisp-msg-protocol:symbol-code
+    (cpl:with-failure-handling ((cram-math:invalid-probability-distribution (f)
+                                  (return)))
+      (let* ((map-array (get-cost-map map))
+             (boxes nil)
+             (max-val (loop for y from 0 below (array-dimension map-array 0)
+                            maximizing (loop for x from 0 below (array-dimension
+                                                                 map-array 1)
+                                             maximizing (aref map-array y x)))))
+        (declare (type cma:double-matrix map-array))
+        (let ((index 0))
+          (dotimes (row (array-dimension map-array 0))
+            (dotimes (col (array-dimension map-array 1))
+              (let ((curr-val (aref map-array row col)))
+                (when (> curr-val threshold)
+                  (let ((pose (tf:make-pose
+                               (tf:make-3d-vector
+                                (+ (* col resolution) origin-x)
+                                (+ (* row resolution) origin-y)
+                                (+ z (or (when elevate-costmap
+                                           (/ curr-val max-val))
+                                         0.0)))
+                               (tf:axis-angle->quaternion
+                                (tf:make-3d-vector 1.0 0.0 0.0) 0.0)))
+                        (color (cond (hsv-colormap
+                                      (hsv->rgb (* 360 (/ curr-val
+                                                          max-val))
+                                                0.5 0.5))
+                                     (intensity-colormap
+                                      (let* ((hsv-color (rgb->hsv
+                                                         (elt base-color 0)
+                                                         (elt base-color 1)
+                                                         (elt base-color 2)))
+                                             (mod-hsv
+                                               (vector (elt hsv-color 0)
+                                                       (elt hsv-color 1)
+                                                       (/ curr-val max-val))))
+                                        (hsv->rgb
+                                         (elt mod-hsv 0)
+                                         (elt mod-hsv 1)
+                                         (elt mod-hsv 2))))
+                                     (t base-color))))
+                    (push (make-message "visualization_msgs/Marker"
+                                        (frame_id header) frame-id
+                                        (stamp header) (ros-time)
+                                        (ns) ""
+                                        (id) index
+                                        (type) (roslisp-msg-protocol:symbol-code
                                                 'visualization_msgs-msg:marker
-                                                :add)
-                                      (pose) (tf:pose->msg pose)
-                                      (x scale) resolution
-                                      (y scale) resolution
-                                      (z scale) resolution
-                                      (r color) (elt color 0)
-                                      (g color) (elt color 1)
-                                      (b color) (elt color 2)
-                                      (a color) 0.9)
-                        boxes)
-                  (incf index))))))
-        (values (make-message "visualization_msgs/MarkerArray"
-                              (markers) (map 'vector #'identity boxes))
-                index)))))
-
+                                                :cube)
+                                        (action) (roslisp-msg-protocol:symbol-code
+                                                  'visualization_msgs-msg:marker
+                                                  :add)
+                                        (pose) (tf:pose->msg pose)
+                                        (x scale) resolution
+                                        (y scale) resolution
+                                        (z scale) resolution
+                                        (r color) (elt color 0)
+                                        (g color) (elt color 1)
+                                        (b color) (elt color 2)
+                                        (a color) 0.9)
+                          boxes)
+                    (incf index))))))
+          (values (make-message "visualization_msgs/MarkerArray"
+                                (markers) (map 'vector #'identity boxes))
+                  index))))))
+  
 (defun occupancy-grid->grid-cells-msg (grid &key (frame-id "/map") (z *z-padding*))
   (with-slots (origin-x origin-y width height resolution) grid
     (let ((grid-arr (grid grid))
