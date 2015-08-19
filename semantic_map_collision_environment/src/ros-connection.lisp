@@ -58,10 +58,21 @@
 (defun publish-semantic-map-collision-object (obj)
   (with-slots (pose dimensions) obj
     (let* ((obj-name (string-upcase (make-collision-obj-name obj)))
-           (pose-stamped (cl-tf2:ensure-pose-stamped-transformed
-                          *tf2*
-                          (tf:pose->pose-stamped "/map" 0.0 pose)
-                          "/odom_combined")))
+           (pose-stamped
+             (progn
+               (cl-tf:wait-for-transform
+                cram-roslisp-common:*tf*
+                :source-frame "/map"
+                :target-frame "/odom_combined"
+                :time 0)
+               (cl-tf:transform-pose
+                cram-roslisp-common:*tf*
+                :pose (tf:pose->pose-stamped "/map" 0.0 pose)
+                :target-frame "/odom_combined"))))
+             ;; (cl-tf2:ensure-pose-stamped-transformed
+             ;;  *tf2*
+             ;;  (tf:pose->pose-stamped "/map" 0.0 pose)
+             ;;  "/odom_combined")))
       (moveit:register-collision-object
        obj-name
        :primitive-shapes (list (roslisp:make-msg

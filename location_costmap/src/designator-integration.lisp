@@ -65,7 +65,8 @@
           "/base_footprint" (roslisp:ros-time)
           (tf:make-identity-vector)
           (tf:make-identity-rotation))
-         "/map")))
+         "/map"
+         :use-current-ros-time nil)));t)))
 
 (defun location-costmap-generator (desig)
   (let ((costmap (get-cached-costmap desig)))
