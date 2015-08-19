@@ -35,6 +35,7 @@
 
 (defun ros-tf-init ()
   (setf *tf* (make-instance 'cl-tf:transform-listener))
-  (setf *tf2* (make-instance 'cl-tf2:buffer-client)))
+  (setf *tf2* *tf*))
+  ;;(setf *tf2* (make-instance 'cl-tf2:buffer-client)))
 
 (roslisp-utilities:register-ros-init-function ros-tf-init)
